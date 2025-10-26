@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Gix Technologies</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.2) 0%, transparent 50%);
+            animation: bgPulse 15s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            z-index: 10000;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+            transition: width 0.1s;
+        }
+
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        nav.scrolled {
+            top: 10px;
+            padding: 1rem 2.5rem;
+            background: rgba(10, 10, 10, 0.9);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+        }
+
+
+        /* ..... */
+        
+        .theme-toggle {
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            margin-right: 1rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(102, 126, 234, 0.3);
+            transform: scale(1.1);
+        }
+
+        .theme-toggle i {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.3s;
+        }
+
+        .theme-toggle:hover i {
+            color: #fff;
+        }
+
+        /* ....... */
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 30px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 4px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        .hero-blog {
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10rem 7% 6rem;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .hero-blog:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, rgba(10, 10, 10, 0.8) 0%, rgba(102, 126, 234, 0.3) 100%),
+                url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            z-index: -1;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-tag {
+            font-size: 0.9rem;
+            color: #667eea;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-content h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #667eea 50%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+        }
+
+        .blog-container {
+            padding: 6rem 7%;
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 1rem 2.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s;
+            font-size: 0.95rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .blog-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: cardFadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes cardFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .blog-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 70px rgba(102, 126, 234, 0.4);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .blog-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+
+        .blog-card:hover .blog-image img {
+            transform: scale(1.1);
+        }
+
+        .blog-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .blog-content {
+            padding: 2.5rem;
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .blog-meta i {
+            color: #667eea;
+        }
+
+        .blog-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+            line-height: 1.4;
+        }
+
+        .blog-excerpt {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .read-more:hover {
+            gap: 1.2rem;
+            color: #764ba2;
+        }
+
+        .featured-post {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 0;
+            margin-bottom: 3rem;
+        }
+
+        .featured-post .blog-image {
+            height: 100%;
+            min-height: 450px;
+        }
+
+        .featured-post .blog-content {
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .featured-post .blog-title {
+            font-size: 2.5rem;
+        }
+
+        .newsletter {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 5rem 4rem;
+            text-align: center;
+            margin: 6rem auto;
+        }
+
+        .newsletter h3 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #667eea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .newsletter p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 3rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 1.3rem 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .newsletter-form input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .newsletter-form button {
+            padding: 1.3rem 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s;
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5);
+        }
+
+        .newsletter-form button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 60px rgba(102, 126, 234, 0.7);
+        }
+
+        footer {
+            background: rgba(10, 10, 10, 0.95);
+            color: white;
+            padding: 5rem 7% 2rem;
+            position: relative;
+            z-index: 2;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.8;
+            margin: 1.5rem 0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1.3rem;
+            transition: all 0.4s;
+        }
+
+        .social-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: translateY(-8px);
+        }
+
+        .footer-links h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links ul li a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-links ul li a:hover {
+            color: #667eea;
+            padding-left: 10px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2.5rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ------ */
+        
+        /* Light Theme */
+        .light-theme body {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(79, 172, 254, 0.3) 100%);
+            /* background: #ffffff; */
+            color: #000000;
+
+        }
+
+        .light-theme .bg-canvas {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(0, 242, 254, 0.1) 100%);
+        }
+
+        .light-theme nav {
+            background: rgba(132, 146, 161, 0.9);
+            backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .light-theme .nav-links a {
+            color: rgba(253, 249, 249, 0.8);
+        }
+
+        .light-theme .nav-links a:hover {
+            color: #4facfe;
+        }
+
+        .light-theme .hero:before {
+            
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(79, 172, 254, 0.3) 100%);
+        }
+
+        .light-theme .stats-section:before {
+            
+            background: linear-gradient(135deg, rgba(200, 225, 248, 0.9) 0%, rgba(93, 151, 206, 0.9) 100%);
+        }
+
+        .light-theme .services {
+            /* background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 100%, rgba(79, 172, 254, 0.3) 0%); */
+            background: #adcef0;
+            color: #000;
+        }
+
+        .light-theme .about {
+            background: #adcef0;
+            color: #000;
+            /* background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(79, 172, 254, 0.3) 100%); */
+        }
+
+        .light-theme .testimonials {
+            background: linear-gradient(135deg,  rgba(79, 172, 254, 0.3) 0%,rgba(255, 255, 255, 0.9) 100%);
+        }
+
+        .light-theme .contact {
+            /* background: #ffffff; */
+            background:  linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(211, 214, 219, 0.9)100%);
+        }
+
+        .light-theme .section-title {
+            background: linear-gradient(135deg, #000 0%, #4facfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .light-theme .hero-text h1 {
+            background: linear-gradient(135deg, #000 0%, #4facfe 50%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .light-theme .hero-text p {
+            color: rgba(0, 0, 0, 0.8);
+        }
+
+        .light-theme .subtitle {
+            color: #4facfe;
+        }
+
+        .light-theme .stat-item {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .light-theme .stat-number {
+            color: #000;
+        }
+
+        .light-theme .stat-label {
+            color: rgba(0, 0, 0, 0.8);
+        }
+
+        .light-theme .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .light-theme .service-card {
+            background: rgba(204, 234, 252, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .light-theme .service-card h3 {
+            color: #000;
+        }
+
+        .light-theme .service-card p {
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .light-theme .about-text {
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .light-theme .feature-item {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .light-theme .feature-content h4 {
+            color: #000;
+        }
+
+        .light-theme .feature-content p {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .light-theme .testimonial-card {
+            background: rgba(210, 231, 247, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .light-theme .testimonial-text {
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .light-theme .client-details h4 {
+            color: #000;
+        }
+
+        .light-theme .client-details p {
+            color: #4facfe;
+        }
+
+        .light-theme .contact-info h2 {
+            background: linear-gradient(135deg, #000 0%, #4facfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .light-theme .contact-info p {
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .light-theme .contact-item {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .light-theme .contact-text h4 {
+            color: #000;
+        }
+
+        .light-theme .contact-text p {
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .light-theme .contact-form {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .light-theme .form-group label {
+            color: #000;
+        }
+
+        .light-theme .form-group input,
+        .light-theme .form-group textarea {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            color: #0a0a0a;
+        }
+
+        .light-theme .form-group input::placeholder,
+        .light-theme .form-group textarea::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        .light-theme .form-group input:focus,
+        .light-theme .form-group textarea:focus {
+            border-color: #4facfe;
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .light-theme footer {
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .light-theme .footer-brand p {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .light-theme .footer-links h4 {
+            color: #000;
+        }
+
+        .light-theme .footer-links ul li a {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .light-theme .footer-links ul li a:hover {
+            color: #4facfe;
+        }
+
+        .light-theme .footer-bottom {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* ----- */
+
+        @media (max-width: 1024px) {
+            .featured-post {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 80%;
+                height: 100vh;
+                background: rgba(10, 10, 10, 0.98);
+                backdrop-filter: blur(30px);
+                flex-direction: column;
+                padding: 6rem 2rem;
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+                transition: left 0.4s;
+                align-items: flex-start;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .newsletter {
+                padding: 3rem 2rem;
+            }
+
+            .newsletter h3 {
+                font-size: 2rem;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-tabs {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .blog-content {
+                padding: 1.5rem;
+            }
+
+            .blog-title {
+                font-size: 1.4rem;
+            }
+
+            .newsletter {
+                padding: 2rem 1rem;
+            }
+
+            .newsletter h3 {
+                font-size: 1.5rem;
+            }
+
+            .newsletter p {
+                font-size: 1rem;
+            }
+
+            .footer-content {
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            nav {
+                width: 95%;
+                padding: 0.8rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .hero-content h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero-content p {
+                font-size: 0.9rem;
+            }
+
+            .blog-content {
+                padding: 1rem;
+            }
+
+            .blog-title {
+                font-size: 1.2rem;
+            }
+
+            .newsletter h3 {
+                font-size: 1.3rem;
+            }
+
+            .newsletter p {
+                font-size: 0.9rem;
+            }
+
+            .filter-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="bg-canvas"></div>
+
+    <nav>
+        <a href="index.html" class="logo">Gix Technologies</a>
+        <ul class="nav-links">
+            <li><a href="index1.html#home">Home</a></li>
+            <li><a href="index1.html#services">Services</a></li>
+            <li><a href="index1.html#about">About</a></li>
+            <li><a href="index1.html#testimonials">Testimonials</a></li>
+
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+         <div class="theme-toggle" id="themeToggle">
+            <i class="fa-solid fa-moon"></i>
+        </div>
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <section class="hero-blog">
+        <div class="hero-content">
+            <div class="hero-tag">INSIGHTS & INNOVATION</div>
+            <h1>Tech Blog</h1>
+            <p>Stay updated with the latest trends, insights, and innovations in software development, AI, and digital transformation</p>
+        </div>
+    </section>
+
+    <div class="blog-container">
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">All Posts</button>
+            <button class="filter-btn" data-filter="ai">AI & ML</button>
+            <button class="filter-btn" data-filter="web">Web Dev</button>
+            <button class="filter-btn" data-filter="mobile">Mobile</button>
+            <button class="filter-btn" data-filter="cloud">Cloud</button>
+            <button class="filter-btn" data-filter="security">Security</button>
+        </div>
+
+        <div class="blog-grid">
+            <article class="blog-card featured-post" data-category="ai">
+                <div class="blog-image">
+                    <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="AI in 2025">
+                    <div class="blog-badge">Featured</div>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="fa-solid fa-calendar"></i> Oct 15, 2025</span>
+                        <span><i class="fa-solid fa-clock"></i> 8 min read</span>
+                    </div>
+                    <h2 class="blog-title">The AI Revolution: How Machine Learning is Reshaping Software Development in 2025</h2>
+                    <p class="blog-excerpt">Artificial Intelligence is no longer just a buzzword—it's transforming how we build, deploy, and maintain software. From AI-powered code assistants to automated testing frameworks, discover the latest trends shaping the future of development.</p>
+                    <a href="#" class="read-more">Read Full Article <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <article class="blog-card" data-category="web">
+                <div class="blog-image">
+                    <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="React">
+                    <div class="blog-badge">Web Dev</div>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="fa-solid fa-calendar"></i> Oct 12, 2025</span>
+                        <span><i class="fa-solid fa-clock"></i> 5 min read</span>
+                    </div>
+                    <h3 class="blog-title">React Server Components: Building Faster Web Apps</h3>
+                    <p class="blog-excerpt">Explore how React Server Components are revolutionizing web performance and user experience with server-side rendering capabilities.</p>
+                    <a href="#" class="read-more">Read More <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <article class="blog-card" data-category="mobile">
+                <div class="blog-image">
+                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Flutter">
+                    <div class="blog-badge">Mobile</div>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="fa-solid fa-calendar"></i> Oct 10, 2025</span>
+                        <span><i class="fa-solid fa-clock"></i> 6 min read</span>
+                    </div>
+                    <h3 class="blog-title">Flutter 4.0: Cross-Platform Development Reaches New Heights</h3>
+                    <p class="blog-excerpt">Discover the latest features in Flutter 4.0 that make cross-platform mobile development more efficient and powerful than ever.</p>
+                    <a href="#" class="read-more">Read More <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <article class="blog-card" data-category="cloud">
+                <div class="blog-image">
+                    <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cloud">
+                    <div class="blog-badge">Cloud</div>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="fa-solid fa-calendar"></i> Oct 8, 2025</span>
+                        <span><i class="fa-solid fa-clock"></i> 7 min read</span>
+                    </div>
+                    <h3 class="blog-title">Kubernetes Best Practices for Production Environments</h3>
+                    <p class="blog-excerpt">Learn essential strategies for deploying and managing containerized applications at scale with Kubernetes in production.</p>
+                    <a href="#" class="read-more">Read More <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <article class="blog-card" data-category="security">
+                <div class="blog-image">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Security">
+                    <div class="blog-badge">Security</div>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="fa-solid fa-calendar"></i> Oct 5, 2025</span>
+                        <span><i class="fa-solid fa-clock"></i> 9 min read</span>
+                    </div>
+                    <h3 class="blog-title">Zero Trust Architecture: The Future of Cybersecurity</h3>
+                    <p class="blog-excerpt">Understand why Zero Trust is becoming the standard security model and how to implement it in your organization.</p>
+                    <a href="#" class="read-more">Read More <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <article class="blog-card" data-category="ai">
+                <div class="blog-image">
+                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="AI">
+                    <div class="blog-badge">AI & ML</div>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="fa-solid fa-calendar"></i> Oct 2, 2025</span>
+                        <span><i class="fa-solid fa-clock"></i> 10 min read</span>
+                    </div>
+                    <h3 class="blog-title">Large Language Models: Building Custom AI Solutions</h3>
+                    <p class="blog-excerpt">A comprehensive guide to fine-tuning and deploying LLMs for enterprise applications and specialized use cases.</p>
+                    <a href="#" class="read-more">Read More <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </article>
+        </div>
+
+        <div class="newsletter">
+            <h3>Subscribe to Our Newsletter</h3>
+            <p>Get the latest tech insights, tutorials, and industry news delivered to your inbox weekly</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Enter your email address" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo">Gix Technologies</div>
+                <p>Empowering businesses through innovative software solutions and cutting-edge technology.</p>
+               <div class="social-links">
+                <a href="https://youtube.com/@gixtechnologies?si=TaQQmJQshIZMe4VL" class="social-link"><i class="fa-brands fa-youtube"></i></a>
+                <a href="https://www.linkedin.com/company/gixtechnologies" class="social-link"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://www.instagram.com/gixtechnologies?igsh=MWx4NXFwdXY2aWphcQ==" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://x.com/gixtechnologies?t=dPPhYd-moGlt6Ei5iL84Rw&s=09" class="social-link"><i class="fa-brands fa-x-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="index1.html#services">Web Development</a></li>
+                    <li><a href="index1.html#services">Mobile Apps</a></li>
+                    <li><a href="index1.html#services">Cloud Solutions</a></li>
+                    <li><a href="index1.html#services">AI & ML</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="index1.html#about">About Us</a></li>
+
+                    
+                    <li><a href="index1.html#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Support</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Gix Technologies. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll Progress
+        window.addEventListener('scroll', () => {
+            const scrollProgress = document.getElementById('scrollProgress');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = (scrollTop / scrollHeight) * 100;
+            scrollProgress.style.width = progress + '%';
+        });
+
+        // Filter Functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const blogCards = document.querySelectorAll('.blog-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.dataset.filter;
+
+                blogCards.forEach((card, index) => {
+                    const category = card.dataset.category;
+                    
+                    if (filter === 'all' || category === filter) {
+                        setTimeout(() => {
+                            card.style.display = 'block';
+                            card.style.animation = 'none';
+                            setTimeout(() => {
+                                card.style.animation = `cardFadeIn 0.8s ease-out ${index * 0.1}s forwards`;
+                            }, 10);
+                        }, index * 50);
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Newsletter Form
+        document.querySelector('.newsletter-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('✅ Thank you for subscribing! Check your inbox for confirmation.');
+            e.target.reset();
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.blog-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Hamburger Menu Toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+
+        // Close menu when clicking on a link
+        navLinks.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') {
+                navLinks.classList.remove('active');
+                menuToggle.classList.remove('active');
+            }
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!nav.contains(e.target)) {
+                navLinks.classList.remove('active');
+                menuToggle.classList.remove('active');
+            }
+        });
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            if (document.body.classList.contains('light-theme')) {
+                themeIcon.className = 'fa-solid fa-sun';
+            } else {
+                themeIcon.className = 'fa-solid fa-moon';
+            }
+        });
+
+
+       
+    </script>
+</body>
+</html>
